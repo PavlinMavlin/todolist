@@ -143,7 +143,7 @@ const addFriends = (students) => {
     //..............................
 }
 console.log(addFriends(students));
-//const addFriends = (students) => (students.map(st => ({...st, friends: students.filter(s => s.name !== st.name)})))
+const addFriends = (students) => (students.map(st => ({...st, friends: students.filter(s => s.name !== st.name)})))
 
 
 

@@ -26,19 +26,19 @@ export const Todolist = React.memo((props: PropsTypeTodolist) => {
         console.log("Todolist called")
 
         const getTasksForTodoList = () => {
-    switch (props.filter) {
-        case "active":
-            return props.tasks.filter((t) => !t.isDone)
-        case "completed":
-            return props.tasks.filter((t) => t.isDone)
-        default:
-            return props.tasks
-    }
-}
+            switch (props.filter) {
+                case "active":
+                    return props.tasks.filter((t) => !t.isDone)
+                case "completed":
+                    return props.tasks.filter((t) => t.isDone)
+                default:
+                    return props.tasks
+            }
+        }
 
-let newTasks = getTasksForTodoList()
+        let newTasks = getTasksForTodoList()
 
-        const tasksJSXElements = props.tasks.map(t => {
+        const tasksJSXElements = newTasks.map(t => {
 
 
             return (

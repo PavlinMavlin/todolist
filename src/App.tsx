@@ -9,7 +9,7 @@ import {TaskPriorities, TaskStatuses, TaskType} from "./api/todolist-api";
 import {FilterValuesType, TodolistDomainType} from "./store/todolists-reducer";
 
 
-export type TaskStateType = {
+type TaskStateType = {
     [key: string]: Array<TaskType>
 }
 
@@ -102,6 +102,8 @@ function App() {
         ]
     })
 
+
+
     //tasks
     function changeTaskTitle(taskId: string, newTitle: string, todoListID: string) {
         tasks[todoListID] = tasks[todoListID].map(t => t.id === taskId ? {...t, title: newTitle} : t)
@@ -145,8 +147,10 @@ function App() {
 
     function addTodoList(title: string) {
         const newTodolistID = v1()
-        const newTodolist: TodolistDomainType = {id: newTodolistID, title: title, filter: "all",addedDate: "",
-            order: 0}
+        const newTodolist: TodolistDomainType = {
+            id: newTodolistID, title: title, filter: "all", addedDate: "",
+            order: 0
+        }
         setTodoList([...todoList, newTodolist])
         setTasks({...tasks, [newTodolistID]: []})
     }

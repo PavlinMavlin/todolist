@@ -68,14 +68,14 @@ export type TaskType = {
 }
 
 type ResponsePostTaskType = {
-    data: { item: Array<TaskType> }
+    data: { item: TaskType }
     totalCount: number
     fieldsErrors: string[]
     messages: string[]
 }
 type ResponseGetTaskType = {
     error: null
-    item: Array<TaskType>
+    items: Array<TaskType>
     totalCount: number
 }
 type ResponseDeleteTaskType = {
@@ -84,11 +84,19 @@ type ResponseDeleteTaskType = {
     messages: string[]
     resultCode: number
 }
-type ResponseUpdateTasTYpe = {
+type ResponseUpdateTaskType = {
     data: TaskType
     fieldsErrors: string[]
     messages: string[]
     resultCode: number
+}
+export type UpdateTaskModelType = {
+    title: string
+    description: string
+    status: number
+    priority: number
+    startDate: string
+    deadline: string
 }
 export const taskAPI = {
     getTask(todolistId: string) {
@@ -100,8 +108,8 @@ export const taskAPI = {
     deleteTask(todolistId: string, taskId: string) {
         return instance.delete<ResponseDeleteTaskType>(`/todo-lists/${todolistId}/tasks/${taskId}`)
     },
-    updateTask(todolistId: string, taskId: string, title: string) {
-        return instance.put<ResponseUpdateTasTYpe>(`/todo-lists/${todolistId}/tasks/${taskId}`, {title})
+    updateTask(todolistId: string, taskId: string, model: UpdateTaskModelType) {
+        return instance.put<ResponseUpdateTaskType>(`/todo-lists/${todolistId}/tasks/${taskId}`, model)
     }
 
 }

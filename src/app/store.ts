@@ -1,5 +1,5 @@
-import {tasksReducer} from './tasks-reducer';
-import {todoListsReducer} from './todolists-reducer';
+import {tasksReducer} from '../features/TodolistsList/tasks-reducer';
+import {todoListsReducer} from '../features/TodolistsList/todolists-reducer';
 import {applyMiddleware, combineReducers, createStore} from 'redux';
 import thunk from "redux-thunk";
 
@@ -9,12 +9,12 @@ const rootReducer = combineReducers({
     tasks: tasksReducer,
     todolists: todoListsReducer
 })
-// непосредственно создаём store
+// непосредственно создаём state
 export const store = createStore(rootReducer, applyMiddleware(thunk));
 // определить автоматически тип всего объекта состояния
 export type AppRootStateType = ReturnType<typeof rootReducer>
 
-// а это, чтобы можно было в консоли браузера обращаться к store в любой момент
+// а это, чтобы можно было в консоли браузера обращаться к state в любой момент
 // @ts-ignore
 window.store = store;
 

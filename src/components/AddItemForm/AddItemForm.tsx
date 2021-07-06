@@ -1,10 +1,12 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
 import {AddBox} from "@material-ui/icons";
 import {IconButton, TextField} from "@material-ui/core";
+import {RequestStatusType} from "../../app/app-reducer";
 
 
   export type AddItemFormPropsType = {
     addItem: (title: string) => void
+      disabled?: boolean
 }
 
 
@@ -48,8 +50,9 @@ export const AddItemForm = React.memo(function (props: AddItemFormPropsType) {
                 helperText={error}
                 label={"Title"}
                 error={!!error}
+                disabled={props.disabled}
             />
-            <IconButton color={"primary"} onClick={addItem}>
+            <IconButton color={"primary"} onClick={addItem} disabled={props.disabled}>
                 <AddBox/>
             </IconButton>
             {/*{errorMessage}*/}

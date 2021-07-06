@@ -1,9 +1,11 @@
 import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType} from "../../api/todolists-api";
-import {addTodoListAC, removeTodoListAC, setTodoAC} from "./todolists-reducer";
+import {addTodoListAC, changeTodolistEntityStatusAC, removeTodoListAC, setTodoAC} from "./todolists-reducer";
 import {Dispatch} from "redux";
 import {TaskStateType} from "../../app/App";
 import {AppRootStateType} from "../../app/store";
-
+import {setAppErrorAC, setAppStatusAC} from "../../app/app-reducer";
+import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
+import {AxiosError} from "axios";
 
 let initialState: TaskStateType = {}
 export const tasksReducer = (state = initialState, action: ActionsType): TaskStateType => {
@@ -67,25 +69,54 @@ export const setTasksAC = (todolistId: string, tasks: Array<TaskType>) => ({
 
 //thunk
 export const fetchTaskTC = (todolistId: string) => (dispatch: Dispatch<ActionsType>) => {
+    dispatch(setAppStatusAC("loading"))
     todolistsAPI.getTask(todolistId)
         .then((res) => {
 
             const tasks = res.data.items
             dispatch(setTasksAC(todolistId, tasks))
+            dispatch(setAppStatusAC('succeeded'))
+        })
+        .catch((err: AxiosError) => {
+            dispatch(setAppErrorAC(err.message))
+            dispatch(setAppStatusAC('failed'))
         })
 }
 export const removeTaskTC = (taskID: string, todolistId: string) => (dispatch: Dispatch<ActionsType>) => {
+    dispatch(setAppStatusAC("loading"))
     todolistsAPI.deleteTask(todolistId, taskID)
         .then((res) => {
             dispatch(removeTaskAC(taskID, todolistId))
+            dispatch(setAppStatusAC('succeeded'))
+        })
+        .catch((err: AxiosError) => {
+            dispatch(setAppErrorAC(err.message))
+            dispatch(setAppStatusAC('failed'))
         })
 }
+
+enum ResponseStatuses {
+    success = 0,
+    error = 1,
+    captcha = 10
+}
 export const addTaskTC = (title: string, todoListID: string) => (dispatch: Dispatch<ActionsType>) => {
+    dispatch(setAppStatusAC("loading"))
+
     todolistsAPI.createTask(todoListID, title)
         .then((res) => {
 
-            const task = res.data.data.item
-            dispatch(addTaskAC(task))
+            if (res.data.resultCode === ResponseStatuses.success) {
+                const task = res.data.data.item
+                dispatch(addTaskAC(task))
+                dispatch(setAppStatusAC('succeeded'))
+
+            } else {
+                handleServerAppError(res.data, dispatch)
+            }
+        })
+        .catch((err: AxiosError) => {
+            handleServerNetworkError(dispatch, err.message)
         })
 }
 export const updateTaskTC = (taskId: string, domainModel: UpdateDomainTaskModelType, todolistId: string) =>
@@ -107,12 +138,22 @@ export const updateTaskTC = (taskId: string, domainModel: UpdateDomainTaskModelT
             status: task.status,
             ...domainModel
         }
-
+        dispatch(setAppStatusAC("loading"))
         todolistsAPI.updateTask(todolistId, taskId, apiModel)
             .then(res => {
-                const action = updateTaskAC(taskId, domainModel, todolistId)
-                dispatch(action)
+                if(res.data.resultCode===0){
+                    const action = updateTaskAC(taskId, domainModel, todolistId)
+                    dispatch(action)
+                    dispatch(setAppStatusAC('succeeded'))
+                }
+                else {
+                    handleServerAppError(res.data, dispatch)
+                }
             })
+            .catch((err: AxiosError) => {
+                handleServerNetworkError(dispatch, err.message)
+            })
+
     }
 
 //types
@@ -124,7 +165,9 @@ export type ActionsType =
     | ReturnType<typeof setTasksAC>
     | ReturnType<typeof addTodoListAC>
     | ReturnType<typeof setTodoAC>
-
+    | ReturnType<typeof setAppStatusAC>
+    | ReturnType<typeof setAppErrorAC>
+    | ReturnType<typeof changeTodolistEntityStatusAC>
 export type UpdateDomainTaskModelType = {
     title?: string
     description?: string

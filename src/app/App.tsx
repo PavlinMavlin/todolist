@@ -1,14 +1,18 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
-import {AppBar, Button, Container, IconButton, Toolbar, Typography} from "@material-ui/core";
+import {AppBar, Button, CircularProgress, Container, IconButton, Toolbar, Typography} from "@material-ui/core";
 import {Menu} from "@material-ui/icons";
 import {TaskType} from "../api/todolists-api";
 import {TodolistsList} from "../features/TodolistsList/TodolistList";
 import LinearProgress from '@material-ui/core/LinearProgress';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./store";
-import {RequestStatusType} from "./app-reducer";
+import {initializeAppTC, RequestStatusType} from "./app-reducer";
 import {ErrorSnackbar} from "../components/ErrorSnackbar/ErrorSnackbar";
+import {Login} from "../features/Login/Login";
+import {Route, Switch, Redirect} from "react-router-dom";
+import {loginTC, logoutTC} from "../features/Login/auth-reducer";
+
 
 export type TaskStateType = {
     [key: string]: Array<TaskType>
@@ -17,6 +21,24 @@ export type TaskStateType = {
 
 function App() {
     const status = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status)
+    const dispatch = useDispatch()
+    const isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.isInitialized)
+    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
+    useEffect(() => {
+        dispatch(initializeAppTC())
+    }, [])
+
+    if (!isInitialized) {
+        return <div
+            style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
+            <CircularProgress/>
+        </div>
+    }
+
+    const logoutHandler = () => {
+        dispatch(logoutTC())
+    }
+
     return (
         <div className="App">
             <ErrorSnackbar/>
@@ -28,13 +50,19 @@ function App() {
                     <Typography variant={"h6"}>
                         Todolists
                     </Typography>
-                    <Button variant={"outlined"}
-                            color={"inherit"}>Login</Button>
+                    {isLoggedIn && <Button variant={"outlined"} onClick={logoutHandler}
+                                           color={"inherit"}>Log out</Button>}
                 </Toolbar>
                 {status === "loading" && <LinearProgress color={"secondary"}/>}
             </AppBar>
             <Container fixed>
-                <TodolistsList/>
+                <Switch>
+                    <Route exact path={'/'} render={() => <TodolistsList/>}/>
+                    <Route path={'/login'} render={() => <Login/>}/>
+                    <Route path={'/404'} render={() => <h1>404: PAGE NOT FOUND</h1>}/>
+                    <Redirect from={'*'} to={'/404'}/>
+                </Switch>
+
             </Container>
         </div>)
 }

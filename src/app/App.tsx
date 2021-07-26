@@ -10,8 +10,8 @@ import {AppRootStateType} from "./store";
 import {initializeAppTC, RequestStatusType} from "./app-reducer";
 import {ErrorSnackbar} from "../components/ErrorSnackbar/ErrorSnackbar";
 import {Login} from "../features/Login/Login";
-import {Route, Switch, Redirect} from "react-router-dom";
-import {loginTC, logoutTC} from "../features/Login/auth-reducer";
+import {Redirect, Route, Switch} from "react-router-dom";
+import {logoutTC} from "../features/Login/auth-reducer";
 
 
 export type TaskStateType = {

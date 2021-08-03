@@ -14,7 +14,7 @@ import {Redirect, Route, Switch} from "react-router-dom";
 import {logoutTC} from "../features/Login/auth-reducer";
 
 
-export type TaskStateType = {
+export type TasksStateType = {
     [key: string]: Array<TaskType>
 
 }

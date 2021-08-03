@@ -1,7 +1,7 @@
 import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType} from "../../api/todolists-api";
 import {addTodoListAC, removeTodoListAC, setTodoAC} from "./todolists-reducer";
 import {Dispatch} from "redux";
-import {TaskStateType} from "../../app/App";
+import {TasksStateType} from "../../app/App";
 import {AppRootStateType} from "../../app/store";
 import {RequestStatusType, setAppErrorAC, setAppStatusAC} from "../../app/app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
@@ -9,7 +9,7 @@ import {AxiosError} from "axios";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 
-let initialState: TaskStateType = {}
+let initialState: TasksStateType = {}
 
 const slice = createSlice({
     name: "tasks",

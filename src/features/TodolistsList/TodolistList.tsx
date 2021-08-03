@@ -15,13 +15,13 @@ import {TaskStatuses} from "../../api/todolists-api";
 import {Grid, Paper} from "@material-ui/core";
 import {Todolist} from "./Todolist/Todolist";
 import AddItemForm from "../../components/AddItemForm/AddItemForm";
-import {TaskStateType} from "../../app/App";
+import {TasksStateType} from "../../app/App";
 import {Redirect} from "react-router-dom";
 
 
 export const TodolistsList: React.FC = () => {
     const todoList = useSelector<AppRootStateType, TodolistDomainType[]>(state => state.todolists)
-    const tasks = useSelector<AppRootStateType, TaskStateType>(state => state.tasks)
+    const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
     const dispatch = useDispatch()
     const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
 

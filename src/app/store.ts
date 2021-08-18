@@ -5,6 +5,7 @@ import {todoListsReducer} from "../features/TodolistsList/todolists-reducer";
 import {appReducer} from "./app-reducer";
 import {authReducer} from "../features/Login/auth-reducer";
 import {configureStore} from "@reduxjs/toolkit";
+import {useDispatch} from "react-redux";
 
 
 // объединяя reducer-ы с помощью combineReducers,
@@ -27,8 +28,10 @@ export const store = configureStore({
 
 // определить автоматически тип всего объекта состояния
 export type AppRootStateType = ReturnType<typeof rootReducer>
+ type AppDispatchType = typeof store.dispatch
+export const useAppDispatch = () =>useDispatch<AppDispatchType>()
 
-// а это, чтобы можно было в консоли браузера обращаться к state в любой момент
-// @ts-ignore
-window.store = store;
+    // а это, чтобы можно было в консоли браузера обращаться к state в любой момент
+    // @ts-ignore
+    window.store = store;
 

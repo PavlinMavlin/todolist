@@ -48,13 +48,13 @@ export const TodolistsList: React.FC = () => {
         dispatch(updateTaskTC(taskId, {status}, todolistId))
     }, [dispatch])
 
-    const removeTask = useCallback((taskID: string, todoListID: string) => {
-        dispatch(removeTaskTC(taskID, todoListID))
+    const removeTask = useCallback((taskID: string, todolistId: string) => {
+        dispatch(removeTaskTC({ taskID,  todolistId}))
     }, [dispatch])
 
 //todolist
     const changeFilter = useCallback((value: FilterValuesType, todoListID: string) => {
-        dispatch(changeTodolistFilterAC({filter:value, todoListID: todoListID}))
+        dispatch(changeTodolistFilterAC({filter: value, todoListID: todoListID}))
     }, [dispatch])
 
     const removeTodoList = useCallback((todoListID: string) => {

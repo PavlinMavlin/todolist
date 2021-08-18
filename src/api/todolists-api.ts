@@ -18,7 +18,7 @@ export const authAPI = {
     me() {
         return instance.get<ResponseType<{ id: number, email: string, login: string }>>('/auth/me')
     },
-    logout(){
+    logout() {
         return instance.delete<ResponseType>('/auth/login')
     }
 }
@@ -60,9 +60,10 @@ export type LoginParamsType = {
     captcha?: string
 }
 
+ export type FieldErrorType = { field: string, error: string };
 export type ResponseType<D = {}> = {
     resultCode: number
-    fieldsErrors: string[]
+    fieldsErrors?: Array<FieldErrorType>
     messages: string[]
     data: D
 }
